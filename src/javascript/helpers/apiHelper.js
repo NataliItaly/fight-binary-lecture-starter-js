@@ -1,9 +1,12 @@
 import { fightersDetails, fighters } from './mockData';
-
-const BASE_API_URL =
-    'https://api.github.com/repos/binary-studio-academy/stage-2-es6-for-everyone/contents/resources/api/';
+// https://api.github.com/repos/binary-studio-academy/stage-2-es6-for-everyone/contents/resources/api/
+// my token:
+// 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
+const BASE_API_URL = 'https://api.github.com/repos/NataliItaly/fight-binary-lecture-starter-js/contents/resources/api/';
 const SECURITY_HEADERS = {
     headers: {
+        authorization: 'token %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%'
+
         /*
          * For the development, you shouldn't use the remote data source, but set useMockAPI=true.
          * To test the application against the real dataset set useMockAPI=false.
@@ -19,6 +22,7 @@ function getFighterById(endpoint) {
     const start = endpoint.lastIndexOf('/');
     const end = endpoint.lastIndexOf('.json');
     const id = endpoint.substring(start + 1, end);
+    console.log('fighter id from getFighterId ', endpoint);
     return fightersDetails.find(it => it._id === id);
 }
 
