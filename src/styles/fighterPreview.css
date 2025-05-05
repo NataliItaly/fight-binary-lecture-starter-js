@@ -1,13 +1,41 @@
 .fighter-preview___root {
-  display: flex;
-  flex-direction: column;
-  flex-basis: 250px;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 250px;
 }
 
 .fighter-preview___right {
-  align-items: flex-end;
+    align-items: flex-end;
 }
 
 .fighter-preview___left {
-  align-items: flex-start;
+    align-items: flex-start;
+}
+
+.fighter-preview___info {
+    background-color: #ffdfa7;
+    padding: 15px;
+    margin: 0;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.fighter-preview___info p {
+    margin: 0;
+    font-size: 14px;
+    text-transform: lowercase;
+}
+
+.fighter-preview__details {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: red;
+    text-shadow: 0 0 0 #000;
+    text-shadow: 1px 1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000, 1px 0px 0 #000, 0px 1px 0 #000,
+        -1px 0px 0 #000, 0px -1px 0 #000;
 }
