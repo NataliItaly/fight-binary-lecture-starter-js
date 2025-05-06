@@ -14,6 +14,7 @@ class App {
             const fightersElement = createFighters(fighters);
 
             App.rootElement.appendChild(fightersElement);
+            console.log('Start App');
         } catch (error) {
             console.warn(error);
             App.rootElement.innerText = 'Failed to load data';

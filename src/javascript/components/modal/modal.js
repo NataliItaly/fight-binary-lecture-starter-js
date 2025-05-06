@@ -10,11 +10,11 @@ function hideModal() {
 
 function createHeader(title, onClose) {
     const headerElement = createElement({ tagName: 'div', className: 'modal-header' });
-    const titleElement = createElement({ tagName: 'span' });
+    const titleElement = createElement({ tagName: 'p', className: 'modal-title' });
     const closeButton = createElement({ tagName: 'div', className: 'close-btn' });
 
-    titleElement.innerText = title;
-    closeButton.innerText = '×';
+    titleElement.textContent = title;
+    closeButton.textContent = '×';
 
     const close = () => {
         hideModal();
@@ -37,7 +37,7 @@ function createModal({ title, bodyElement, onClose }) {
     return layer;
 }
 
-export default function showModal({ title, bodyElement, onClose = () => {} }) {
+export default function showModal({ title, bodyElement, onClose }) {
     const root = getModalContainer();
     const modal = createModal({ title, bodyElement, onClose });
 

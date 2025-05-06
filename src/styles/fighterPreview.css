@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: column;
     flex-basis: 250px;
+    height: 100%;
 }
 
 .fighter-preview___right {
@@ -12,10 +13,25 @@
     align-items: flex-start;
 }
 
+.fighter-preview___img {
+    height: 100%;
+}
+
+.fighter-preview___right .fighter-preview___img {
+    transform: rotateY(190deg);
+    -webkit-transform: rotateY(190deg);
+    -moz-transform: rotateY(190deg);
+    -ms-transform: rotateY(190deg);
+    -o-transform: rotateY(190deg);
+}
+
 .fighter-preview___info {
     background-color: #ffdfa7;
-    padding: 15px;
+    box-sizing: border-box;
+    width: 200px;
+    padding: 5px 10px;
     margin: 0;
+    border: 5px solid #ca9650;
     border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-border-radius: 10px;
@@ -30,12 +46,13 @@
 }
 
 .fighter-preview__details {
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 20px;
+    font-family: 'Comic Relief', system-ui;
+    font-weight: 700;
+    color: #000;
+    -webkit-text-fill-color: #ba0303;
+    -webkit-text-stroke-width: 1px;
+    font-size: 16px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: red;
-    text-shadow: 0 0 0 #000;
-    text-shadow: 1px 1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, -1px -1px 0 #000, 1px 0px 0 #000, 0px 1px 0 #000,
-        -1px 0px 0 #000, 0px -1px 0 #000;
+    margin-left: 5px;
 }
