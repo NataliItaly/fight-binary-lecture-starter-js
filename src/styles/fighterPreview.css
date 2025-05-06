@@ -46,10 +46,13 @@
 }
 
 .fighter-preview__details {
+    font-family: 'Comic Relief', system-ui;
+    font-weight: 700;
+    color: #000;
+    -webkit-text-fill-color: #ba0303;
+    -webkit-text-stroke-width: 1px;
     font-size: 16px;
-    font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: #ba0303;
     margin-left: 5px;
 }
