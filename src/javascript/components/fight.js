@@ -7,13 +7,15 @@ export async function fight(firstFighter, secondFighter) {
             ...firstFighter,
             currentHealth: firstFighter.health,
             isBlocking: false,
-            lastCriticalTime: new Set()
+            lastCriticalTime: 0,
+            pressedKeys: new Set()
         };
         const playerTwo = {
             ...secondFighter,
             currentHealth: secondFighter.health,
             isBlocking: false,
-            lastCriticalTime: new Set()
+            lastCriticalTime: 0,
+            pressedKeys: new Set()
         };
 
         const CRIT_COOLDOWN = 10000;
@@ -32,22 +34,45 @@ export async function fight(firstFighter, secondFighter) {
             resolve(winner);
         }
 
+        function isCriticalHit(comboKeys, pressedKeys) {
+            return comboKeys.every(key => pressedKeys.has(key));
+        }
+
         function keyDownHandle(event) {
             const keyCode = event.code;
             console.log(keyCode);
-            // Додаємо клавіші до списку
-            if (Object.values(controls.PlayerOneCriticalHitCombination).includes(keyCode)) {
-                playerOne.pressedKeys.add(keyCode);
-            }
-            if (Object.values(controls.PlayerTwoCriticalHitCombination).includes(keyCode)) {
-                playerTwo.pressedKeys.add(keyCode);
-            }
 
-            // Блок
+            // Add keyCodes to the list:
+            playerOne.pressedKeys.add(keyCode);
+            playerTwo.pressedKeys.add(keyCode);
+
+            // Block
             if (keyCode === controls.PlayerOneBlock) playerOne.isBlocking = true;
             if (keyCode === controls.PlayerTwoBlock) playerTwo.isBlocking = true;
 
-            // Атака
+            // Critical hit player 1
+            if (isCriticalHit(controls.PlayerOneCriticalHitCombination, playerOne.pressedKeys)) {
+                const now = Date.now();
+                if (now - playerOne.lastCriticalTime > CRIT_COOLDOWN) {
+                    const damage = playerOne.attack * 2;
+                    playerTwo.currentHealth -= damage;
+                    updateHealthBar(healthBar2, playerTwo.currentHealth, secondFighter.health);
+                    playerOne.lastCriticalTime = now;
+                }
+            }
+
+            // Critical hit player 2
+            if (isCriticalHit(controls.PlayerTwoCriticalHitCombination, playerTwo.pressedKeys)) {
+                const now = Date.now();
+                if (now - playerTwo.lastCriticalTime > CRIT_COOLDOWN) {
+                    const damage = playerTwo.attack * 2;
+                    playerOne.currentHealth -= damage;
+                    updateHealthBar(healthBar1, playerOne.currentHealth, firstFighter.health);
+                    playerTwo.lastCriticalTime = now;
+                }
+            }
+
+            // Attack Player 1
             if (keyCode === controls.PlayerOneAttack) {
                 if (!playerTwo.isBlocking) {
                     const damage = getDamage(playerOne, playerTwo);
@@ -56,6 +81,7 @@ export async function fight(firstFighter, secondFighter) {
                 }
             }
 
+            // Attack Player 2
             if (keyCode === controls.PlayerTwoAttack) {
                 if (!playerOne.isBlocking) {
                     const damage = getDamage(playerTwo, playerOne);
@@ -63,6 +89,8 @@ export async function fight(firstFighter, secondFighter) {
                     updateHealthBar(healthBar1, playerOne.currentHealth, firstFighter.health);
                 }
             }
+
+            // Is it end fight condition
             if (playerOne.currentHealth <= 0) endFight(secondFighter);
             if (playerTwo.currentHealth <= 0) endFight(firstFighter);
         }
@@ -71,9 +99,11 @@ export async function fight(firstFighter, secondFighter) {
             const keyCode = event.code;
             console.log(keyCode);
 
-            //playerOne.pressedKeys.delete(keyCode);
-            //playerTwo.pressedKeys.delete(keyCode);
+            // Delete keyCode from the list of active keys
+            playerOne.pressedKeys.delete(keyCode);
+            playerTwo.pressedKeys.delete(keyCode);
 
+            // Delete block
             if (keyCode === controls.PlayerOneBlock) {
                 playerOne.isBlocking = false;
                 console.log('controls.PlayerOneBlock from keyUpHandle', controls.PlayerOneBlock);
@@ -82,10 +112,6 @@ export async function fight(firstFighter, secondFighter) {
                 playerTwo.isBlocking = false;
                 console.log('controls.PlayerTwoBlock from keyUpHandle', controls.PlayerTwoBlock);
             }
-        }
-
-        function arraysEqual(a, b) {
-            return a.length === b.length && a.every((val, i) => val === b[i]);
         }
 
         document.addEventListener('keydown', keyDownHandle);
