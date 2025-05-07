@@ -29,8 +29,6 @@ export default function showWinnerModal(fighter) {
             const root = document.getElementById('root');
             const arena = document.querySelector('.arena___root');
             arena?.remove();
-            //root.innerHTML = '';
-            root.replaceChildren();
             App.startApplication();
         }
     });
