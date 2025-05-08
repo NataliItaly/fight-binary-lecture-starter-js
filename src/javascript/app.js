@@ -1,8 +1,9 @@
 import createFighters from './components/fightersView';
 import fighterService from './services/fightersService';
+import Root from '../constants/root';
 
 class App {
-    static rootElement = document.getElementById('root');
+    static rootElement = Root;
 
     static loadingElement = document.getElementById('loading-backdrop');
 

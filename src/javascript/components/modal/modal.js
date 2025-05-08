@@ -1,8 +1,6 @@
 import createElement from '../../helpers/domHelper';
+import Root from '../../../constants/root';
 
-function getModalContainer() {
-    return document.getElementById('root');
-}
 function hideModal() {
     const modal = document.getElementsByClassName('modal-layer')[0];
     modal?.remove();
@@ -38,8 +36,6 @@ function createModal({ title, bodyElement, onClose }) {
 }
 
 export default function showModal({ title, bodyElement, onClose }) {
-    const root = getModalContainer();
     const modal = createModal({ title, bodyElement, onClose });
-
-    root.append(modal);
+    Root.append(modal);
 }

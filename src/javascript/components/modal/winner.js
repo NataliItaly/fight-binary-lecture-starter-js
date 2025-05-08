@@ -1,6 +1,7 @@
 import showModal from './modal';
 import createElement from '../../helpers/domHelper';
 import App from '../../app';
+import Root from '../../../constants/root';
 
 export default function showWinnerModal(fighter) {
     // Remove previous hit info container
@@ -29,9 +30,7 @@ export default function showWinnerModal(fighter) {
         title,
         bodyElement,
         onClose: () => {
-            const root = document.getElementById('root');
-            const arena = document.querySelector('.arena___root');
-            arena?.remove();
+            Root.innerHTML = '';
             App.startApplication();
         }
     });
