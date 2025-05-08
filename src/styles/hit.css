@@ -20,7 +20,10 @@
 }
 
 .hit__critical {
+    width: 250px;
+    height: 250px;
     color: #ffdfa7;
+    text-transform: uppercase;
     background: url(../../resources/critical-hit.png) center / cover no-repeat;
 }
 
