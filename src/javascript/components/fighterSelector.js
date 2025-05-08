@@ -30,7 +30,6 @@ function startFight(selectedFighters) {
 function createVersusBlock(selectedFighters) {
     const canStartFight = selectedFighters.filter(Boolean).length === 2;
     const onClick = () => {
-        console.log('start fight');
         startFight(selectedFighters);
     };
     const container = createElement({ tagName: 'div', className: 'preview-container___versus-block' });

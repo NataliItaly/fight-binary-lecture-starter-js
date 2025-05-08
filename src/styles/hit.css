@@ -1,0 +1,75 @@
+.hit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 100px;
+    right: 55%;
+    width: 200px;
+    height: 200px;
+    background: url(../../resources/attack.png) center / cover no-repeat;
+}
+
+.hit__block {
+    background: #ca9650 url(../../resources/block.png) center / 150px no-repeat;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+}
+
+.hit__critical {
+    color: #ffdfa7;
+    background: url(../../resources/critical-hit.png) center / cover no-repeat;
+}
+
+.hit__player2 {
+    left: 55%;
+    transform: rotateY(180deg);
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -ms-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+}
+
+.hit__container {
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.hit__player2 .hit__container {
+    transform: rotateY(-180deg);
+    -webkit-transform: rotateY(-180deg);
+    -moz-transform: rotateY(-180deg);
+    -ms-transform: rotateY(-180deg);
+    -o-transform: rotateY(-180deg);
+}
+
+.hit__fighter,
+.hit__damage {
+    display: block;
+    font-family: 'Comic Relief', system-ui;
+    font-weight: 700;
+    color: #000;
+    -webkit-text-fill-color: #ba0303;
+    -webkit-text-stroke-width: 1px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.hit__critical .hit__fighter,
+.hit__critical .hit__damage {
+    display: block;
+    font-family: 'Comic Relief', system-ui;
+    font-weight: 700;
+    color: #000;
+    -webkit-text-fill-color: #ffdfa7;
+    -webkit-text-stroke-width: 1px;
+    font-size: 16px;
+    text-transform: uppercase;
+}

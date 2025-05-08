@@ -1,4 +1,5 @@
 import controls from '../../constants/controls';
+import hitInfo from './hitInfo';
 
 export async function fight(firstFighter, secondFighter) {
     return new Promise(resolve => {
@@ -18,7 +19,8 @@ export async function fight(firstFighter, secondFighter) {
             pressedKeys: new Set()
         };
 
-        const CRIT_COOLDOWN = 10000;
+        let isFightEnded = false;
+        const criticalHitTime = 10000;
         const healthBar1 = document.getElementById('left-fighter-indicator');
         const healthBar2 = document.getElementById('right-fighter-indicator');
         console.log('playerOne ', playerOne);
@@ -29,6 +31,8 @@ export async function fight(firstFighter, secondFighter) {
         }
 
         function endFight(winner) {
+            if (isFightEnded) return;
+            isFightEnded = true;
             document.removeEventListener('keydown', keyDownHandle);
             document.removeEventListener('keyup', keyUpHandle);
             resolve(winner);
@@ -40,57 +44,157 @@ export async function fight(firstFighter, secondFighter) {
 
         function keyDownHandle(event) {
             const keyCode = event.code;
-            console.log(keyCode);
+
+            // Remove previous hit info container
+            const hitInfoContainer = document.getElementById('hit');
+            hitInfoContainer?.remove();
 
             // Add keyCodes to the list:
-            playerOne.pressedKeys.add(keyCode);
-            playerTwo.pressedKeys.add(keyCode);
+            //playerOne.pressedKeys.add(keyCode);
+            //playerTwo.pressedKeys.add(keyCode);
 
             // Block
-            if (keyCode === controls.PlayerOneBlock) playerOne.isBlocking = true;
-            if (keyCode === controls.PlayerTwoBlock) playerTwo.isBlocking = true;
+            //if (keyCode === controls.PlayerOneBlock) playerOne.isBlocking = true;
+            //if (keyCode === controls.PlayerTwoBlock) playerTwo.isBlocking = true;
+
+            // Player 1 Keys
+            if (
+                controls.PlayerOneAttack === keyCode ||
+                controls.PlayerOneBlock === keyCode ||
+                controls.PlayerOneCriticalHitCombination.includes(keyCode)
+            ) {
+                playerOne.pressedKeys.add(keyCode);
+                console.log('Player1 pressed :', playerOne.pressedKeys);
+                if (keyCode === controls.PlayerOneBlock) {
+                    playerOne.isBlocking = true;
+
+                    // Set block info
+                    document.getElementById('root').append(hitInfo(playerOne, ['block', 'player1']));
+                    console.log('Player1 is blocking :', playerOne.isBlocking);
+                }
+
+                // Critical hit Player 1
+                if (isCriticalHit(controls.PlayerOneCriticalHitCombination, playerOne.pressedKeys)) {
+                    console.log('critical hit player1');
+                    const now = Date.now();
+                    if (now - playerOne.lastCriticalTime > criticalHitTime) {
+                        console.log('critical hit player1 SUCCESSED');
+                        const damage = playerOne.attack * 2;
+
+                        // Set hit info
+                        document.getElementById('root').append(hitInfo(playerOne, ['critical', 'player1'], damage));
+
+                        playerTwo.currentHealth -= damage;
+                        updateHealthBar(healthBar2, playerTwo.currentHealth, secondFighter.health);
+                        playerOne.lastCriticalTime = now;
+                        playerOne.pressedKeys.clear();
+                    }
+                }
+
+                // Attack Player 1
+                if (keyCode === controls.PlayerOneAttack && !playerTwo.isBlocking) {
+                    const damage = getDamage(playerOne, playerTwo);
+                    console.log('player1 attack with damage: ', damage);
+                    playerTwo.currentHealth -= damage;
+
+                    // Set hit info
+                    document.getElementById('root').append(hitInfo(playerOne, ['player1'], damage));
+                    //hitInfo.style.display = 'block';
+                    updateHealthBar(healthBar2, playerTwo.currentHealth, secondFighter.health);
+                }
+            }
+
+            // Player 2 Keys
+            if (
+                controls.PlayerTwoAttack === keyCode ||
+                controls.PlayerTwoBlock === keyCode ||
+                controls.PlayerTwoCriticalHitCombination.includes(keyCode)
+            ) {
+                playerTwo.pressedKeys.add(keyCode);
+                console.log('Player2 pressed :', playerTwo.pressedKeys);
+                if (keyCode === controls.PlayerTwoBlock) {
+                    playerTwo.isBlocking = true;
+
+                    // Set block info
+                    document.getElementById('root').append(hitInfo(playerTwo, ['block', 'player2']));
+                    console.log('Player1 is blocking :', playerOne.isBlocking);
+                    console.log('Player2 is blocking :', playerTwo.isBlocking);
+                }
+
+                // Critical hit Player 2
+                if (isCriticalHit(controls.PlayerTwoCriticalHitCombination, playerTwo.pressedKeys)) {
+                    console.log('critical hit player2');
+
+                    const now = Date.now();
+                    if (now - playerTwo.lastCriticalTime > criticalHitTime) {
+                        console.log('critical hit player2 SUCCESSED');
+                        const damage = playerTwo.attack * 2;
+
+                        // Set hit info
+                        document.getElementById('root').append(hitInfo(playerTwo, ['critical', 'player2'], damage));
+                        playerOne.currentHealth -= damage;
+                        updateHealthBar(healthBar1, playerOne.currentHealth, firstFighter.health);
+                        playerTwo.lastCriticalTime = now;
+                        playerTwo.pressedKeys.clear(); // Скидання комбінації
+                    }
+                }
+
+                // Attack Player 2
+                if (keyCode === controls.PlayerTwoAttack && !playerOne.isBlocking) {
+                    const damage = getDamage(playerTwo, playerOne);
+                    console.log('player2 attack with damage: ', damage);
+
+                    // Set hit info
+                    document.getElementById('root').append(hitInfo(playerTwo, ['player2'], damage));
+                    playerOne.currentHealth -= damage;
+                    updateHealthBar(healthBar1, playerOne.currentHealth, firstFighter.health);
+                }
+            }
 
             // Critical hit player 1
-            if (isCriticalHit(controls.PlayerOneCriticalHitCombination, playerOne.pressedKeys)) {
+            /*if (isCriticalHit(controls.PlayerOneCriticalHitCombination, playerOne.pressedKeys)) {
+                console.log('Critical hit Player1');
+
                 const now = Date.now();
-                if (now - playerOne.lastCriticalTime > CRIT_COOLDOWN) {
+                if (now - playerOne.lastCriticalTime > criticalHitTime) {
                     const damage = playerOne.attack * 2;
                     playerTwo.currentHealth -= damage;
                     updateHealthBar(healthBar2, playerTwo.currentHealth, secondFighter.health);
                     playerOne.lastCriticalTime = now;
                 }
-            }
+            }*/
 
             // Critical hit player 2
-            if (isCriticalHit(controls.PlayerTwoCriticalHitCombination, playerTwo.pressedKeys)) {
+            /*if (isCriticalHit(controls.PlayerTwoCriticalHitCombination, playerTwo.pressedKeys)) {
+                console.log('Critical hit Player2');
                 const now = Date.now();
-                if (now - playerTwo.lastCriticalTime > CRIT_COOLDOWN) {
+                if (now - playerTwo.lastCriticalTime > criticalHitTime) {
                     const damage = playerTwo.attack * 2;
                     playerOne.currentHealth -= damage;
                     updateHealthBar(healthBar1, playerOne.currentHealth, firstFighter.health);
                     playerTwo.lastCriticalTime = now;
                 }
-            }
+            }*/
 
             // Attack Player 1
-            if (keyCode === controls.PlayerOneAttack) {
+            /*if (keyCode === controls.PlayerOneAttack) {
                 if (!playerTwo.isBlocking) {
                     const damage = getDamage(playerOne, playerTwo);
                     playerTwo.currentHealth -= damage;
                     updateHealthBar(healthBar2, playerTwo.currentHealth, secondFighter.health);
                 }
-            }
+            }*/
 
             // Attack Player 2
-            if (keyCode === controls.PlayerTwoAttack) {
+            /*if (keyCode === controls.PlayerTwoAttack) {
                 if (!playerOne.isBlocking) {
                     const damage = getDamage(playerTwo, playerOne);
                     playerOne.currentHealth -= damage;
                     updateHealthBar(healthBar1, playerOne.currentHealth, firstFighter.health);
                 }
-            }
+            }*/
 
-            // Is it end fight condition
+            // End fight condition
             if (playerOne.currentHealth <= 0) endFight(secondFighter);
             if (playerTwo.currentHealth <= 0) endFight(firstFighter);
         }
@@ -106,11 +210,9 @@ export async function fight(firstFighter, secondFighter) {
             // Delete block
             if (keyCode === controls.PlayerOneBlock) {
                 playerOne.isBlocking = false;
-                console.log('controls.PlayerOneBlock from keyUpHandle', controls.PlayerOneBlock);
             }
             if (keyCode === controls.PlayerTwoBlock) {
                 playerTwo.isBlocking = false;
-                console.log('controls.PlayerTwoBlock from keyUpHandle', controls.PlayerTwoBlock);
             }
         }
 
