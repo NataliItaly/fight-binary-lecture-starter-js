@@ -22,7 +22,6 @@ function getFighterById(endpoint) {
     const start = endpoint.lastIndexOf('/');
     const end = endpoint.lastIndexOf('.json');
     const id = endpoint.substring(start + 1, end);
-    console.log('fighter id from getFighterId ', endpoint);
     return fightersDetails.find(it => it._id === id);
 }
 
