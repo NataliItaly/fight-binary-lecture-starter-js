@@ -25,11 +25,6 @@ export default function hitInfo(fighter, fighterClass, damage) {
     }
     infoContainer.textContent = setInfoText();
 
-    /*fighterClass.includes('block')
-        ? ' is blocking '
-        : fighterClass.includes('critical')
-        ? 'critical hit with damage '
-        : ' attack with damage ';*/
     const infoFighter = createElement({ tagName: 'span', className: 'hit__fighter' });
     infoFighter.textContent = fighter.name;
 
