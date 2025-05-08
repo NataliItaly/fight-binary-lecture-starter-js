@@ -14,7 +14,9 @@
         "build": "vite build",
         "preview": "vite preview",
         "lint": "eslint --ext .js .",
-        "lint:fix": "npm run lint -- --fix"
+        "lint:fix": "npm run lint -- --fix",
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
     },
     "author": "Binary Studio developers",
     "license": "ISC",
@@ -30,6 +32,7 @@
         "eslint-plugin-import": "^2.25.3",
         "eslint-plugin-jsx-a11y": "^6.5.1",
         "eslint-plugin-prettier": "^4.2.1",
+        "gh-pages": "^6.3.0",
         "lint-staged": "^13.2.2",
         "prettier": "^2.8.8",
         "simple-git-hooks": "^2.13.0",
