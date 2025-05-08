@@ -1,20 +1,7 @@
-import { fightersDetails, fighters } from './mockData';
-// https://api.github.com/repos/binary-studio-academy/stage-2-es6-for-everyone/contents/resources/api/
-// my token:
-// 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
-const BASE_API_URL = 'https://api.github.com/repos/NataliItaly/fight-binary-lecture-starter-js/contents/resources/api/';
-const SECURITY_HEADERS = {
-    headers: {
-        authorization: `token ${import.meta.env.VITE_GITHUB_TOKEN}`
+// src/api/apiService.js
+import { fighters, fightersDetails } from './mockData.js';
 
-        /*
-         * For the development, you shouldn't use the remote data source, but set useMockAPI=true.
-         * To test the application against the real dataset set useMockAPI=false.
-         * But to test the application you don't need to extend the GitHub REST API rate limit to 5000 requests with the token
-         */
-        // authorization: 'token %github_token%'
-    }
-};
+const BASE_API_URL = 'https://api.github.com/repos/NataliItaly/fight-binary-lecture-starter-js/contents/resources/api/';
 
 const useMockAPI = import.meta.env.VITE_USE_MOCK_API === 'true';
 
@@ -34,7 +21,12 @@ async function fakeCallApi(endpoint) {
 
 export default async function callApi(endpoint, method = 'GET') {
     const url = BASE_API_URL + endpoint;
-    const options = { method, ...SECURITY_HEADERS };
+    const options = {
+        method,
+        headers: {
+            authorization: `token ${import.meta.env.VITE_GITHUB_TOKEN}`
+        }
+    };
 
     return useMockAPI
         ? fakeCallApi(endpoint)
